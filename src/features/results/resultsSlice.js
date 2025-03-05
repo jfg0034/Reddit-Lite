@@ -2,10 +2,10 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getSearchResults } from '../../api/apiService';
 
 // Load results
-const loadResults = createAsyncThunk(
+export const loadResults = createAsyncThunk(
     'results/getResults',
-    async(query) => {
-        return await getSearchResults(query);
+    async({query, sort}) => {
+        return await getSearchResults(query, sort);
     }
 );
 
@@ -24,9 +24,9 @@ const resultsSlice = createSlice({
                 state.hasError = false;
             })
             .addCase(loadResults.fulfilled, (state, action) => {
+                state.results = action.payload;
                 state.isLoading = false;
                 state.hasError = false;
-                state.results = action.payload;
             })
             .addCase(loadResults.rejected, (state) => {
                 state.isLoading = false;

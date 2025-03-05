@@ -1,12 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getHomeFeed } from '../../api/apiService';
+import { getFeedByType } from '../../api/apiService';
 
 // Load feed
 export const loadFeed = createAsyncThunk(
     'feed/getFeed',
-    async() => {
-        console.log('inside thunk...');
-        return await getHomeFeed();
+    async({subreddit, sort}) => {
+        return await getFeedByType(subreddit, sort);
     }
 );
 
@@ -25,9 +24,9 @@ const feedSlice = createSlice({
                 state.hasError = false;
             })
             .addCase(loadFeed.fulfilled, (state, action) => {
+                state.feed = action.payload;
                 state.isLoading = false;
                 state.hasError = false;
-                state.feed = action.payload;
             })
             .addCase(loadFeed.rejected, (state) => {
                 state.isLoading = false;

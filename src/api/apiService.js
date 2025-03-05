@@ -1,63 +1,170 @@
 import { formatDistanceToNow } from 'date-fns';
 const baseUrl ='https://www.reddit.com';
 
+
+
 // Helper function
 const formatTime = (time) => {
     const past = new Date(time * 1000);
     const timeAgo = formatDistanceToNow(past, {addSuffix: true});
     return timeAgo;
+};
+
+const refineData = (data) => {
+    return {
+        id: data.id,
+        subreddit: data.subreddit,
+        title: data.title,
+        author: data.author,
+        score: data.score,
+        num_comments: data.num_comments,
+        created: formatTime(data.created),
+        preview: data.preview?.images?.[0].source.url || null,
+        thumbnail: data.is_self ? null : data.thumbnail,
+        video: data.is_video ? data.secure_media.reddit_video.fallback_url : null,
+        text_html: data.selftext,
+    };
+};
+
+const refineCommentData = (data) => {
+    return {
+        replies: data.replies,
+        id: data.id,
+        author: data.author,
+        created: formatTime(data.created),
+        score: data.score,
+        body: data.body,
+        depth: data.depth
+    };
+}
+
+const getReplies = (replies) => {
+    const allReplies = replies.data.children;
+    const moreReplies = allReplies.pop();
+    return {
+        replies: allReplies.map(reply => {
+            return refineCommentData(reply.data);
+        })
+    };
 }
 
 
-const getHomeFeed = async() => {
-    const endpoint = baseUrl + '/.json?feed=home';
+// Retrieves a subreddit, sort can be defined to filter results
+const getFeedByType = async(subreddit = 'popular', sort = 'hot') => {
+    const endpoint = baseUrl + `/r/${subreddit}/${sort}.json?raw_json=1`;
     const response = await fetch(endpoint);
-    if (response.ok) {
+    if(response.ok) {
         const results = (await response.json()).data.children;
-        return results.map(post => ({
-            subreddit: post.data.subreddit_name_prefixed,
-            title: post.data.title,
-            score: post.data.score,
-            id: post.data.id,
-            author: post.data.author,
-            num_comments: post.data.num_comments,
-            created: formatTime(post.data.created),
-            //preview: decodeURIComponent(post.data?.preview?.images?.[0].source.url) || ''
-            preview: post.data.url_overridden_by_dest
+        return (results.map(result => {
+            return refineData(result.data);
         }));
     }
     else {
-        throw new Error('Could not get home');
+        throw new Error('Could not retrieve subreddit');
     }
 }
 
-const getSearchResults = async(query) => {
+
+const getSearchResults = async(query, sort = 'hot') => {
     const encodedQuery = encodeURIComponent(query);
-    const endpoint = baseUrl + '/search/.json?q=' + encodedQuery;
+    const endpoint = baseUrl + `/search/.json?raw_json=1&type=posts&q=${encodedQuery}&sort=${sort}`;
     const response = await fetch(endpoint);
     if (response.ok) {
         const results = (await response.json()).data.children;
-        return results.map(post => ({
-            subreddit: post.data.subreddit_name_prefixed,
-            title: post.data.title,
-            score: post.data.score,
-            id: post.data.id,
-            author: post.data.author,
-            num_comments: post.data.num_comments,
-            created: formatTime(post.data.created),
-            //preview: decodeURIComponent(post.data?.preview?.images?.[0].source.url) || ''
-            preview: post.data.url_overridden_by_dest
-        }));
+        return results.map(post => {
+            return refineData(post.data);
+        });
     }
     else {
         throw new Error('Could not get home');
     }
-}
+};
+
+const getPostPage = async(subreddit, postId) => {
+    const endpoint = baseUrl + `/r/${subreddit}/comments/${postId}.json?raw_json=1`;
+    const response = await fetch(endpoint);
+    if (response.ok) {
+        const page = await response.json();
+        const post = page[0].data.children[0].data;
+        const comments = page[1].data.children;
+        const more = comments.pop();
+        const refinedComments = comments.map(comment => {
+            return refineCommentData(comment.data);
+        });
+        return {
+            post: refineData(post),
+            comments: refinedComments,
+            more: more
+        };
+    }
+    else {
+        throw new Error('Could not retrieve post or comments');
+    }
+};
+
+// Get popular subreddits
+const getTopSubreddits = async() => {
+    const response = await fetch('https://www.reddit.com/subreddits/popular.json?limit=10');
+    if (response.ok) {
+        const results = (await response.json()).data.children;
+        return results.map(subreddit => {
+            return {
+                id :subreddit.data.id,
+                name: subreddit.data.display_name,
+                members: subreddit.data.subscribers,
+                icon: subreddit.data.icon_img
+            }
+        });
+    }
+    else {
+        throw new Error('Could not get subreddits.')
+    }
+};
 
 
-export { getHomeFeed, getSearchResults };
+//const subreddit = 'law';
+//const postId = '1j0yur7';
+//getPostPage(subreddit, postId);
+//getHomeFeed();
+//getByCategory('r', 'popular');
+
+
+export { getSearchResults, getPostPage, getFeedByType, getTopSubreddits };
 
 /**
+ *
+thumbnail: 
+            data.thumbnail ?
+                {
+                    url: data.thumbnail,
+                    width: data.thumbnail_width,
+                    height: data.thumbnail_height
+                } : null,
+        video: 
+            data.is_video ? 
+                {
+                    url: data.secure_media.reddit_video.fallback_url,
+                    height: data.secure_media.reddit_video.height,
+                    width: data.secure_media.reddit_video.width
+                } : null,
+
+ * 
+ "<!-- SC_OFF --><div class="md"><p>So my (28M) girlfriend, Sarah (26F), just had her birthday dinner at a nice restaurant with about 12 of our friends. I spent weeks planning it—made the reservation, coordinated with her friends, even got the staff to bring out a surprise cake at the end.</p>
+
+<p>Dinner was going well until Sarah stood up, tapped her glass, and said she had an &quot;important announcement.&quot; Then, with the biggest smile, she goes: <em>&quot;I just want to thank everyone for coming tonight… and a special thank you to my wonderful boyfriend, who has been so amazing. So amazing, in fact, that I’m happy to say I finally see him as a true best friend… and nothing more.&quot;</em></p>
+
+<p>The table went silent. I thought it was some weird joke, but then she kept talking about how she had been thinking for a while and realized she loved me, but &quot;not in that way.&quot; In front of <strong>everyone</strong>.</p>
+
+<p>I felt like an idiot. I just sat there, stunned, while some of her friends awkwardly tried to change the subject. Eventually, I just grabbed my coat and left. I didn’t cause a scene, I didn’t say anything—I just walked out.</p>
+
+<p>Sarah started throwing texts up my phone, calling me &quot;dramatic&quot; and saying I embarrassed her on her birthday. She said she thought we were mature enough to handle this like adults and that I should have stayed. But I just couldn’t sit there and pretend everything was fine after that public humiliation.</p>
+
+<p>AITAH?</p>
+</div><!-- SC_ON -->"
+ * 
+ * 
+ * 
+ * 
 {
   kind: 't3',
   data: {

@@ -1,5 +1,5 @@
-import Card from "../../components/Card";
 import { useSelector} from "react-redux";
+import Card from "../../components/Card";
 
 const tempStyle = {
     border : "1px solid black",
@@ -12,30 +12,18 @@ function Feed() {
         <div>
             {feed.map(post => {
                 return (
-                    <div style={tempStyle}>
-                        <h3>{post.title}</h3>
-                        {post.preview && <img src={post.preview}/>}
-                        <aside>Score: {post.score}</aside>
-                        <aside>{post.author} | comments: {post.num_comments} | {post.created} </aside>
-                    </div>
+                    <Card key={post.id} post={post}/>
                 );                    
             })}
         </div>
     );
 }
 
-/*
-<Card
-    subreddit={post.subreddit}
-    title={post.title}
-    score={post.score}
-    id={post.id}
-    author={post.author}
-    num_comments={post.num_comments}
-    created={post.created}
-    preview={post.preview}    
-/>
-*/
-
+/**
+preview: data.preview?.images?.[0].source.url || null,
+thumbnail: data.thumbnail,
+video: data.is_video ? data.secure_media.reddit_video.fallback_url : null,
+text_html: data.selftext,
+ */
 
 export default Feed;

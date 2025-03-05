@@ -1,16 +1,24 @@
+import { NavLink } from "react-router-dom";
+
 const tempStyle = {
     border : "1px solid black",
     margin: "20px"
 }
 
-function Card(props) {
+function Card({post}) {
     return (
-        <div style={tempStyle}>
-            <h3>{props.title}</h3>
-            <p>Description</p>
-            {props.preview && <img src={props.preview}/>}
-            <aside>Score: {props.score}</aside>
-            <aside>{props.author} | comments: {props.num_comments} | {props.created} </aside>
+        <div style={tempStyle} key={post.id}>
+            <p>r/{post.subreddit} | {post.author}</p>
+            <NavLink to={`/posts/${post.subreddit}/${post.id}`}>{post.title}</NavLink>
+            <br/>
+            {(post.thumbnail && post.thumbnail !== 'default') && <img width="140" src={post.thumbnail}/>}
+            {post.thumbnail === 'default' && <img width="140" src={post.preview}/>}
+            {post.video && 
+                <video width="140" controls>
+                    <source src={post.video}></source>    
+                </video>}
+            <aside>Score: {post.score}</aside>
+            <aside>Comments: {post.num_comments} | {post.created} </aside>
         </div>
     );
 }
