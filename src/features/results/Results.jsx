@@ -1,13 +1,9 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useParams, NavLink } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { loadResults } from "./resultsSlice";
 import Card from "../../components/Card";
-
-const tempStyle = {
-    border : "1px solid black",
-    margin: "20px"
-}
+import styles from "./Results.module.css";
 
 function Results() {
     const dispatch = useDispatch();
@@ -20,10 +16,10 @@ function Results() {
     }, [query, sortBy]);
     const results = useSelector(state => state.results.results);
     return (
-        <div>
+        <div className={styles.results}>
             {results.map(post => {
                 return (
-                    <Card key={post.id} post={post}/>
+                    <Card key={post.id} post={post} detail='small'/>
                 );                    
             })}
         </div>

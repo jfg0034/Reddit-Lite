@@ -12,12 +12,16 @@ export const loadPostPage = createAsyncThunk(
 const postSlice = createSlice({
     name: 'post',
     initialState: {
-        post: {},
+        post: null,
         comments: [],
         isLoading: false,
         hasError: false
     },
-    reducers: {},
+    reducers: {
+        setCurrentPost: (state, action) => {
+            state.post = action.payload;
+        },
+    },
     extraReducers: (builder) => {
         builder
             .addCase(loadPostPage.pending, (state) => {
@@ -25,8 +29,10 @@ const postSlice = createSlice({
                 state.hasError = false;
             })
             .addCase(loadPostPage.fulfilled, (state, action) => {
-                state.post = action.payload.post;
                 state.comments = action.payload.comments;
+                if (!state.post) { // Update post only if it is not present already
+                    state.post = action.payload.post;
+                }
                 state.isLoading = false;
                 state.hasError = false;
             })
@@ -36,5 +42,7 @@ const postSlice = createSlice({
             });
     }
 });
+
+export const { setCurrentPost } = postSlice.actions;
 
 export default postSlice.reducer;

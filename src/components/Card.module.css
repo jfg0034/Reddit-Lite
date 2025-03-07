@@ -1,0 +1,63 @@
+.card {
+    padding: 10px;
+    border-top: 1px solid rgb(161, 161, 161);
+}
+.card:hover {
+    background-color: rgb(243, 243, 243);
+    border: 1px solid rgb(161, 161, 161);
+    border-radius: 10px 10px 0 0;
+}
+
+.card aside {
+    display: flex;
+    justify-content: space-between;
+}
+.card h2 {
+    margin: 0;
+    text-align: left;
+}
+
+.textContent {
+    text-align: justify;
+    margin: 10px 0;
+}
+
+.textContent p {
+    margin: 0;
+}
+.textContent a {
+    display: block;
+    margin: 0;
+}
+
+/*For feed results*/
+.big {
+    margin: 10px 0;
+}
+.big .media {
+    max-height: 600px;
+    max-width: 80%;
+    margin: 10px;
+}
+
+/*For card results*/
+.small {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+}
+
+.small .textContent {
+    max-height: 100px;
+    overflow: hidden;
+}
+
+.small .media {
+    width: 150px;
+    height: 100px;
+    object-fit: contain;
+    object-position: center;
+    background-color: black;
+    margin: 10px 0 10px 10px;
+}
+

@@ -18,7 +18,6 @@ a {
 }
 a:hover {
   color: #000dff;
-  font-weight: bolder;
 }
 a:visited {
   color: #161a70;
@@ -34,6 +33,14 @@ body {
 
 main {
   display: flex;
+  justify-content: space-around;
+  padding: 20px;
+}
+main > div:first-child {
+  width: 20%;
+}
+main > div:last-child {
+  width: 75%;
 }
 
 h1 {

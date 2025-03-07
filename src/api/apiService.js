@@ -10,6 +10,27 @@ const formatTime = (time) => {
     return timeAgo;
 };
 
+/* Define preview image if enabled
+const setPreview = (preview) => {
+    if (preview) {
+        if (preview.enabled) return preview.images[0].source.url;
+    }
+    return null;
+}*/
+
+// Set type of post
+const getType = (data) => {
+    if (data.selftext) return 'text';
+    else if (data.is_video) return 'video';
+    else if (data.preview) {
+        if (data.preview.enabled) return 'image';
+        else return 'thumbnail_url';
+    }
+    else if (data.is_gallery) return 'gallery';
+    else if (!data.is_self) return 'url_only';
+    else return 'unknown';
+}
+
 const refineData = (data) => {
     return {
         id: data.id,
@@ -19,10 +40,13 @@ const refineData = (data) => {
         score: data.score,
         num_comments: data.num_comments,
         created: formatTime(data.created),
-        preview: data.preview?.images?.[0].source.url || null,
-        thumbnail: data.is_self ? null : data.thumbnail,
+        preview: data.preview?.images[0].source.url,
+        thumbnail: data.is_self || data.thumbnail === 'default' ? null : data.thumbnail,
         video: data.is_video ? data.secure_media.reddit_video.fallback_url : null,
-        text_html: data.selftext,
+        text: data.selftext,
+        gallery: data.is_gallery ? data.gallery_data.items : null, // This is simply a list of objects, images are not usable in this form
+        external_url: data.url,
+        type: getType(data),
     };
 };
 
@@ -102,6 +126,7 @@ const getPostPage = async(subreddit, postId) => {
     }
 };
 
+
 // Get popular subreddits
 const getTopSubreddits = async() => {
     const response = await fetch('https://www.reddit.com/subreddits/popular.json?limit=10');
@@ -120,6 +145,8 @@ const getTopSubreddits = async() => {
         throw new Error('Could not get subreddits.')
     }
 };
+
+
 
 
 //const subreddit = 'law';

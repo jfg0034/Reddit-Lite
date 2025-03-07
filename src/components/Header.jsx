@@ -2,7 +2,7 @@ import SearchBar from "../features/searchBar/SearchBar";
 
 // Quick style
 const headerStyle = {
-    backgroundColor: 'rgb(126, 133, 238)'
+    backgroundColor: 'rgb(153, 156, 199)'
 }
 
 function Header() {

@@ -1,18 +1,14 @@
 import { useSelector} from "react-redux";
 import Card from "../../components/Card";
-
-const tempStyle = {
-    border : "1px solid black",
-    margin: "20px"
-}
+import styles from "./Feed.module.css";
 
 function Feed() {
     const feed = useSelector(state => state.feed.feed);
     return (
-        <div>
+        <div className={styles.feed}>
             {feed.map(post => {
                 return (
-                    <Card key={post.id} post={post}/>
+                    <Card key={post.id} post={post} detail='big'/>
                 );                    
             })}
         </div>
