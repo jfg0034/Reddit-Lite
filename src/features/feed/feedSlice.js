@@ -12,11 +12,16 @@ export const loadFeed = createAsyncThunk(
 const feedSlice = createSlice({
     name: 'feed',
     initialState: {
+        subreddit: 'popular',
         feed: [],
         isLoading: false,
         hasError: false
     },
-    reducers: {},
+    reducers: {
+        setCurrentSubreddit: (state, action) => {
+            state.subreddit = action.payload;
+        }
+    },
     extraReducers: (builder) => {
         builder
             .addCase(loadFeed.pending, (state) => {
@@ -35,5 +40,5 @@ const feedSlice = createSlice({
     }
 });
 
-
+export const { setCurrentSubreddit } = feedSlice.actions;
 export default feedSlice.reducer;

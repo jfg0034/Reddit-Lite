@@ -54,7 +54,6 @@ button {
   border-radius: 20px;
   background-color: rgb(222, 222, 231);
   border: 1px solid black;
-  width: 80px;
   padding: 10px;
   font-size: 1em;
   font-weight: 500;
@@ -65,8 +64,4 @@ button {
 button:hover {
   border-color: hsl(237, 100%, 70%);
   background-color: rgb(234, 234, 240);
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
 }

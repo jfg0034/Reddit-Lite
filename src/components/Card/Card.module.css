@@ -17,6 +17,17 @@
     text-align: left;
 }
 
+.subreddit {
+    font-weight: bolder;
+    background-color: rgb(199, 187, 187);
+    padding: 5px;
+    border-radius: 10px;
+}
+.subreddit:hover {
+    cursor: pointer;
+    font-weight: bolder;
+}
+
 .textContent {
     text-align: justify;
     margin: 10px 0;
@@ -34,10 +45,20 @@
 .big {
     margin: 10px 0;
 }
-.big .media {
-    max-height: 600px;
-    max-width: 80%;
-    margin: 10px;
+
+.big div {
+    margin: 0 auto;
+}
+
+.media > img, .media > video {
+    width: 80%;
+    height: 500px;
+    object-fit: contain;
+    object-position: center;
+    background-color: rgb(31, 31, 34);
+    border: 1px solid rgb(31, 31, 34);
+    border-radius: 10px;
+    margin: 10px 0;
 }
 
 /*For card results*/
@@ -52,7 +73,7 @@
     overflow: hidden;
 }
 
-.small .media {
+.small img {
     width: 150px;
     height: 100px;
     object-fit: contain;

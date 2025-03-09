@@ -1,6 +1,38 @@
 .post {
-    background-color: gray;
+    border: 1px solid rgb(110, 110, 141);
+    border-radius: 10px;
+    padding: 10px;
 }
-.comments {
-    background-color: cyan;
+
+.post h1 {
+    font-size: 2.5em;
+    padding: 10px 0;
+}
+.post div {
+    margin: 0 auto;
+}
+.media > img, .media > video {
+    width: 80%;
+    height: 500px;
+    object-fit: contain;
+    object-position: center;
+    background-color: rgb(31, 31, 34);
+    border: 1px solid rgb(31, 31, 34);
+    border-radius: 10px;
+    margin: 10px 0;
+}
+.textContent {
+    text-align: justify;
+    color: black;
+    margin: 10px 0;
+}
+.textContent p {
+    margin: 10px 0;
+}
+.topDetails, .bottomDetails {
+    display: flex;
+    justify-content: space-between;   
+}
+.topDetails > span:first-child{
+    font-weight: bold;
 }

@@ -1,0 +1,38 @@
+.comment {
+    border-radius: 10px;
+    margin-top: 10px;
+    text-align: left;
+    border: 1px solid rgb(110, 110, 141);
+    padding: 10px;
+    box-shadow: -3px -3px rgb(189, 178, 178);
+}
+.commentBody {
+    margin: 10px 0;
+    color: black;
+}
+.commentBody p {
+    margin: 5px 0;
+}
+
+.topDetails, .bottomDetails {
+    display: flex;
+    justify-content: space-between;   
+}
+.topDetails > span:first-child {
+    font-weight: bold;
+}
+.bottomDetails {
+    align-items: end;
+}
+
+.bottomDetails button {
+    border: 1px solid rgb(110, 110, 141);
+    background-color: rgb(236, 236, 245);
+    padding: 5px 7px;
+    border-radius: 10px;
+}
+.bottomDetails button:hover {
+    cursor: pointer;
+    background-color: rgb(236, 236, 245);
+    box-shadow: -1px -1px rgb(189, 178, 178);
+}

@@ -3,69 +3,55 @@ import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import ReactMarkdown from 'react-markdown';
 import { loadPostPage } from "./postSlice";
+import Comment from "../../components/Comment/Comment";
+import Gallery from "../../components/Gallery/Gallery";
+import ErrorMessage from "../../components/ErrorMessage/ErrorMessage";
 import styles from "./Post.module.css";
-
-const tempStyle = {
-    border : "1px solid black",
-    margin: "20px"
-}
 
 function Post() {
     const dispatch = useDispatch();
     const {subreddit, postId} = useParams();
     useEffect(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
         if (subreddit && postId) {
             dispatch(loadPostPage({subreddit, postId}));
         }
     }, [dispatch, subreddit, postId]);
-    const {isLoading, post, comments} = useSelector(state => state.post);
-    return (
-        <div className={styles.page}>
-            {post && 
-                <div className={styles.post}>
-                    <span>{post.subreddit}</span>
-                    <span>{post.created}</span>
-                    <h1>{post.title}</h1>
-                    <p>author: {post.author}</p>
-                    <div className={styles.media}>
-                        {post.type === 'video' && <video className={styles.media} controls autoPlay loop muted><source src={post.video}/></video>}
-                        {post.type === 'image' && <img className={styles.media} src={post.preview}/>}
-                        {post.type === 'thumbnail_url' && <img className={styles.media} src={post.preview}/>}
-                        {post.type === 'gallery' && <p>Gallery, not supported yet!</p>}
+    const {isLoading, hasError, post, comments} = useSelector(state => state.post);
+    return (<>
+        {hasError? <ErrorMessage message={'This post could not be retrieved. Try again from the home page.'}/> :
+            <div>
+                {post && 
+                    <div className={styles.post}>
+                        <div className={styles.topDetails}>
+                            <span>r/{post.subreddit} | By: {post.author}</span>
+                            <span>{post.created}</span>
+                        </div>
+                        <hr/>
+                        <h1>{post.title}</h1>
+                        <div className={styles.media}>
+                            {post.type.media === 'video' && <video controls autoPlay loop muted><source src={post.video}/></video>}
+                            {post.type.media === 'image' && <img src={post.preview}/>}
+                            {post.type.media === 'thumbnail_url' && <img src={post.preview}/>}
+                            {post.type.media === 'gallery' && <Gallery imageList={post.gallery}/>}
+                        </div>
+                        <div className={styles.textContent}>
+                            {post.type.text === 'text' && <ReactMarkdown>{post.text}</ReactMarkdown>}
+                            {(post.type.text === 'url_only' || post.type.text === 'url') && <a href={post.external_url}>{post.external_url}</a>}
+                        </div>
+                        <hr/>
+                        <div className={styles.bottomDetails}>
+                            <span>Score: {post.score}</span>
+                            <span>{post.num_comments} 💬</span>
+                        </div>
                     </div>
-                    <div className={styles.textContent}>
-                        {post.type === 'text' && <ReactMarkdown>{post.text}</ReactMarkdown>}
-                        {(post.type === 'url_only' || post.type === 'thumbnail_url') && <a href={post.external_url}>{post.external_url}</a>}
-                    </div>
-                    <aside>Score: {post.score}</aside>
-                </div>
-            }
-            {isLoading && <p>Loading comments...</p>}
-            {!isLoading && 
-                <div className={styles.comments}>
-                    <p>Comments:  </p>
-                    {comments.map(comment => {
-                        return (
-                            <div style={tempStyle} key={comment.id}>
-                                <p>{comment.author}</p>
-                                <ReactMarkdown>{comment.body}</ReactMarkdown>
-                                <p>{comment.score} || {comment.created}</p>
-                            </div>
-                        );
-                    })}
-                </div>
-            }
-        </div>
-    );
+                }
+                <hr/>
+                {comments.length === 0 && <p>No comments posted yet.</p>}
+                {!isLoading && comments.map(comment => <Comment comment={comment} key={comment.id}/>)}
+            </div>
+        }
+    </>);
 }
-
-/*
-
-
-num_comments: data.num_comments,
-
-thumbnail: data.is_self || data.thumbnail === 'default' ? null : data.thumbnail,
-
-*/
 
 export default Post;

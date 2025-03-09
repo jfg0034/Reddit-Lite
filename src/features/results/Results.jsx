@@ -2,7 +2,8 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { loadResults } from "./resultsSlice";
-import Card from "../../components/Card";
+import Card from "../../components/Card/Card";
+import ErrorMessage from "../../components/ErrorMessage/ErrorMessage";
 import styles from "./Results.module.css";
 
 function Results() {
@@ -11,13 +12,20 @@ function Results() {
     const { sortBy } = useSelector(state => state.searchBar);
     useEffect(() => {
         if (query) {
+            window.scrollTo({ top: 0, behavior: "smooth" });
             dispatch(loadResults({query, sort: sortBy}));
         }
     }, [query, sortBy]);
-    const results = useSelector(state => state.results.results);
+    const { results, hasError, isLoading } = useSelector(state => state.results);
+    if (hasError) {
+        return <ErrorMessage message={`Could not retrieve '${query}'`}/>;
+    }
+    if (results.length === 0) {
+        return <ErrorMessage message={`There are no results for '${query}'`}/>;
+    }
     return (
         <div className={styles.results}>
-            {results.map(post => {
+            {!isLoading && results.map(post => {
                 return (
                     <Card key={post.id} post={post} detail='small'/>
                 );                    
@@ -25,6 +33,5 @@ function Results() {
         </div>
     );
 }
-
 
 export default Results;
