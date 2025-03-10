@@ -6,6 +6,7 @@ import Card from "../../components/Card/Card";
 import ErrorMessage from "../../components/ErrorMessage/ErrorMessage";
 import styles from "./Results.module.css";
 
+// Shows a list of results in a smaller version than the feed 
 function Results() {
     const dispatch = useDispatch();
     const { query } = useParams();
@@ -20,7 +21,7 @@ function Results() {
     if (hasError) {
         return <ErrorMessage message={`Could not retrieve '${query}'`}/>;
     }
-    if (results.length === 0) {
+    if (!isLoading && results.length === 0) {
         return <ErrorMessage message={`There are no results for '${query}'`}/>;
     }
     return (

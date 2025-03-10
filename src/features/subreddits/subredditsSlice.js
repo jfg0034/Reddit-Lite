@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getTopSubreddits } from "../../api/apiService";
 
+// Load subreddits
 export const loadSubreddits = createAsyncThunk(
     'subreddits/loadSubreddits',
     async () => {

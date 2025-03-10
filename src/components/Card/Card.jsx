@@ -1,11 +1,12 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import ReactMarkdown from 'react-markdown';
 import { useDispatch, useSelector } from "react-redux";
 import Gallery from "../Gallery/Gallery";
 import { setCurrentPost } from "../../features/post/postSlice";
 import { setCurrentSubreddit } from "../../features/feed/feedSlice";
 import styles from "./Card.module.css";
 
+// Displays important information per post
+// Consider that video media is for display only but has no audio 
 function Card({post, detail}) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -22,7 +23,6 @@ function Card({post, detail}) {
             navigate('/');
         }
     }
-
     return (
         <article className={styles.card}>
             <aside>
@@ -35,17 +35,21 @@ function Card({post, detail}) {
                 <div>
                     <h2><NavLink to={`/posts/${post.subreddit}/${post.id}`} onClick={handlePostView}>{post.title}</NavLink></h2>
                     <div className={styles.textContent}>
-                        {(detail === 'big' && post.type.text === 'text') && <ReactMarkdown>{post.text}</ReactMarkdown>}
                         {(post.type.text === 'url_only' || post.type.text === 'url') && <a href={post.external_url}>{post.external_url}</a>}
                     </div>
                 </div>
                 {detail === 'big' && <div className={styles.media}>
-                    {post.type.media === 'image' && <img src={post.preview}/>}
-                    {post.type.media === 'video' && <video controls autoPlay loop muted><source src={post.video}/></video>}
+                    {post.type.media === 'image' && <img src={post.preview} alt="post-image" loading="lazy"/>}
+                    {post.type.media === 'video' && <video controls autoPlay loop muted loading="lazy"><source src={post.video}/></video>}
                     {post.type.media === 'gallery' && <Gallery imageList={post.gallery}/>}
                 </div>}
                 {detail === 'small' && <div>
-                    {post.thumbnail && <img src={post.thumbnail} alt="thumbnail"/>}
+                    {post.thumbnail && 
+                    <img 
+                        src={post.thumbnail.includes('https://') ? post.thumbnail : post.preview} 
+                        alt="thumbnail" 
+                        loading="lazy"
+                    />}
                 </div>}
             </div>
             <aside>

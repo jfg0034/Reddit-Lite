@@ -34,6 +34,7 @@ const getSearchResults = async(query, sort = 'hot') => {
     }
 };
 
+// Retrieves post and comments
 const getPostPage = async(subreddit, postId) => {
     const endpoint = baseUrl + `/r/${subreddit}/comments/${postId}.json?raw_json=1`;
     const response = await fetch(endpoint);

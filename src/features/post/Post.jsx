@@ -8,6 +8,8 @@ import Gallery from "../../components/Gallery/Gallery";
 import ErrorMessage from "../../components/ErrorMessage/ErrorMessage";
 import styles from "./Post.module.css";
 
+// Post component, displays full content including text and media
+// Consider that video media is for display only but has no audio 
 function Post() {
     const dispatch = useDispatch();
     const {subreddit, postId} = useParams();
@@ -31,8 +33,8 @@ function Post() {
                         <h1>{post.title}</h1>
                         <div className={styles.media}>
                             {post.type.media === 'video' && <video controls autoPlay loop muted><source src={post.video}/></video>}
-                            {post.type.media === 'image' && <img src={post.preview}/>}
-                            {post.type.media === 'thumbnail_url' && <img src={post.preview}/>}
+                            {post.type.media === 'image' && <img src={post.preview} alt="post-image"/>}
+                            {post.type.media === 'thumbnail_url' && <img src={post.preview} alt="post-thumbnail"/>}
                             {post.type.media === 'gallery' && <Gallery imageList={post.gallery}/>}
                         </div>
                         <div className={styles.textContent}>
@@ -47,8 +49,10 @@ function Post() {
                     </div>
                 }
                 <hr/>
-                {comments.length === 0 && <p>No comments posted yet.</p>}
-                {!isLoading && comments.map(comment => <Comment comment={comment} key={comment.id}/>)}
+                {!isLoading && (
+                    comments.length === 0 ? <p>No comments posted yet.</p> : 
+                    comments.map(comment => <Comment comment={comment} key={comment.id}/>)
+                )}
             </div>
         }
     </>);

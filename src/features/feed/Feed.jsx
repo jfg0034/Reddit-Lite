@@ -5,6 +5,7 @@ import Card from "../../components/Card/Card";
 import ErrorMessage from "../../components/ErrorMessage/ErrorMessage";
 import styles from "./Feed.module.css";
 
+// Main content Feed
 function Feed() {
     const dispatch = useDispatch();
     const { sortBy } = useSelector(state => state.searchBar);
@@ -15,7 +16,7 @@ function Feed() {
         dispatch(loadFeed({subreddit, sort: sortBy}));
     }, [sortBy, subreddit, dispatch]);
     const { feed, hasError, isLoading } = useSelector(state => state.feed);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "smooth" }); // Focus page to top
     if (hasError) {
         return <ErrorMessage message={'Could not load Feed, try again.'}/>
     }

@@ -12,7 +12,7 @@ export const loadFeed = createAsyncThunk(
 const feedSlice = createSlice({
     name: 'feed',
     initialState: {
-        subreddit: 'popular',
+        subreddit: undefined,
         feed: [],
         isLoading: false,
         hasError: false

@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
+// Default error message
 function ErrorMessage({message}) {
     const navigate = useNavigate();
     const goBackHome = () => {

@@ -13,9 +13,4 @@ export default configureStore({
         post: postReducer,
         subreddits: subredditsReducer
     },
-    middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(({ dispatch, getState }) => (next) => (action) => {
-            console.log("Dispatching action:", action);
-            return next(action);
-        }),
 });

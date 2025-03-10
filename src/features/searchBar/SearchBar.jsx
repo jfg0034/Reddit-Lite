@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setSortBy } from "./searchBarSlice";
 import styles from "./SearchBar.module.css";
 
+// Display search bar and sorting buttons
 function SearchBar() {
     const navigate = useNavigate();
     const dispatch = useDispatch();

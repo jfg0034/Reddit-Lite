@@ -36,3 +36,14 @@
 .topDetails > span:first-child{
     font-weight: bold;
 }
+
+@media (max-width: 800px) {
+    .topDetails {
+        flex-direction: column;
+        text-align: left;
+    }
+    .media > img, .media > video {
+        width: 80%;
+        height: 300px;
+    }
+}

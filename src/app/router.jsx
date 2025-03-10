@@ -13,5 +13,4 @@ const router = createBrowserRouter(createRoutesFromElements(
     </Route>
 ));
 
-
 export default router;

@@ -12,15 +12,15 @@
 
 a {
   font-weight: 500;
-  color: #646cff;
+  color: #252dc4;
   text-decoration: inherit;
   cursor: pointer;
 }
 a:hover {
-  color: #000dff;
+  color: #0a1080;
 }
 a:visited {
-  color: #161a70;
+  color: #171b5c;
 }
 
 body {
@@ -64,4 +64,19 @@ button {
 button:hover {
   border-color: hsl(237, 100%, 70%);
   background-color: rgb(234, 234, 240);
+}
+
+@media (max-width: 800px) {
+  h1 {
+    font-size: 2.5em;
+  }
+  h2 {
+    font-size: 1.5em;
+  }
+  main {
+    display: block;
+  }
+  main > div:first-child, main > div:last-child {
+    width: 100%;
+  }
 }

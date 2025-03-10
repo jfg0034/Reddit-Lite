@@ -1,23 +1,26 @@
-.subreddits {
+.subreddits > div, .subreddits h2 {
     background-color: rgb(222, 222, 231);
     border-radius: 10px;
-    align-self: flex-start;
-}
-.subreddits h2 {
-    margin: 0;
-    padding: 10px;
-    border-radius: 10px;
+    border: 1px solid rgb(161, 161, 161);
 }
 
 .subreddits > div {
+    align-self: flex-start;
+}
+.subreddits h2 {
+    margin-bottom: 40px;
+    padding: 10px;
+}
+
+.subreddits > div > div {
     padding: 10px;
     height: 50px;
     display: flex;
     align-items: center;
     border-radius: 10px;
 }
-.subreddits > div:hover, .subreddits h2:hover {
-    background-color: rgb(204, 204, 204);
+.subreddits > div > div:hover, .subreddits h2:hover {
+    background-color: rgb(173, 171, 171);
     cursor: pointer;
 }
 
@@ -34,4 +37,25 @@
 }
 .subreddits hr {
     margin: 0;
+}
+
+.subreddits {
+    position: sticky;
+    top: 0;
+    max-height: 98vh; 
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+@media (max-width: 800px) {
+    .subreddits {
+        background-color: white;
+        position: static;
+    }
+    .subreddits h2 {
+        margin: 0 0 1em;
+    }
+    .subreddits > div {
+        display: none;
+    }
 }
